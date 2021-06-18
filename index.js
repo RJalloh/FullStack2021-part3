@@ -1,6 +1,7 @@
 const express = require('express')
 const morgan = require('morgan')
 const app = express()
+const cors = require('cors')
 
 app.use(express.json())
 
@@ -12,6 +13,7 @@ morgan.token('content', function getContent (req) {
     }       
 })
 
+app.use(cors())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :content'))
 
 
@@ -41,6 +43,10 @@ let persons = [
 const generateId = () => {
     return Math.floor(Math.random() * 10000)
   }
+
+app.get('/', (req, res) => {
+    return res.json(`<h1>Hello from Heroku!</h1>`)
+})
 
 app.get('/api/persons', (req, res) => {
     return res.json(persons)
@@ -101,7 +107,7 @@ app.post('/api/persons', (request, response) => {
   })
  
 
-const PORT = 3001
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
+const PORT = process.env.PORT || 3001
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`)
 })
