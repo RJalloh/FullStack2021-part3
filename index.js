@@ -45,7 +45,7 @@ const generateId = () => {
   }
 
 app.get('/', (req, res) => {
-    return res.json(`<h1>Hello from Heroku!</h1>`)
+    return res.json('<h1>Hello from Heroku!</h1>')
 })
 
 app.get('/api/persons', (req, res) => {
