@@ -4,6 +4,7 @@ const app = express()
 const cors = require('cors')
 
 app.use(express.json())
+app.use(express.static('build'))
 
 morgan.token('content', function getContent (req) {
     if (JSON.stringify(req.body) !== "{}" ) {
@@ -45,7 +46,7 @@ const generateId = () => {
   }
 
 app.get('/', (req, res) => {
-    return res.json('<h1>Hello from Heroku!</h1>')
+    return res.json('Hello from Heroku!')
 })
 
 app.get('/api/persons', (req, res) => {
