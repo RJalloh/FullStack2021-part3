@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-undef */
 const express = require('express')
 const app = express()
 const cors = require('cors')
@@ -10,11 +12,11 @@ app.use(cors())
 app.use(express.json())
 
 morgan.token('content', function getContent (req) {
-    if (JSON.stringify(req.body) !== "{}" ) {
-        return JSON.stringify(req.body)
-    } else {
-        return ""
-    }       
+  if (JSON.stringify(req.body) !== '{}' ) {
+    return JSON.stringify(req.body)
+  } else {
+    return ''
+  }
 })
 
 const errorHandler = (error, request, response, next) => {
@@ -22,7 +24,7 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
-  } else if (error.name == 'ValidationError') {
+  } else if (error.name === 'ValidationError') {
     return response.status(400).json({ error: error.message })
   }
 
@@ -32,7 +34,7 @@ const errorHandler = (error, request, response, next) => {
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :content'))
 
 app.get('/', (req, res) => {
-    return res.json('Hello from Heroku!')
+  return res.json('Hello from Heroku!')
 })
 
 app.get('/api/persons', (request, response) => {
@@ -42,15 +44,15 @@ app.get('/api/persons', (request, response) => {
 })
 
 app.get('/api/persons/:id', (request, response, next) => {
-    Person.findById(request.params.id).then(person => {
-      if (person) {
-        response.json(person)
-      } else {
-        response.status(404).end()
-      }
-    })
-    .catch(error => next(error))
+  Person.findById(request.params.id).then(person => {
+    if (person) {
+      response.json(person)
+    } else {
+      response.status(404).end()
+    }
   })
+    .catch(error => next(error))
+})
 
 
 app.get('/info', (request, response) => {
@@ -66,38 +68,23 @@ app.get('/info', (request, response) => {
 
 
 app.delete('/api/persons/:id', (request, response, next) => {
-    Person.findByIdAndRemove(request.params.id)
+  Person.findByIdAndRemove(request.params.id)
     .then(result => {
       response.status(204).end()
     })
     .catch(error => next(error))
-  })
+})
 
 app.post('/api/persons', (request, response, next) => {
-    const body = request.body
-    /*
-    if (!body.name) {
-      return response.status(400).json({ 
-        error: 'name missing' 
-      })
-    } else if (!body.number) {
-        return response.status(400).json({ 
-        error: 'number missing'
-        })
-    } else if (!Person.find({name: body.name})) {
-        return response.status(400).json({ 
-        error: 'name must be unique' 
-          })
-    }
-    */
-    const person = new Person({
-        name: body.name,
-        number: body.number
-    })
-    person.save().then(savedPerson => {
-      response.json(savedPerson)
-    }).catch(error => next(error))
+  const body = request.body
+  const person = new Person({
+    name: body.name,
+    number: body.number
   })
+  person.save().then(savedPerson => {
+    response.json(savedPerson)
+  }).catch(error => next(error))
+})
 
 app.put('/api/persons/:id', (request, response, next) => {
   const body = request.body
@@ -115,14 +102,14 @@ app.put('/api/persons/:id', (request, response, next) => {
 })
 
 const unknownEndpoint = (request, response) => {
-    response.status(404).send({ error: 'unknown endpoint' })
+  response.status(404).send({ error: 'unknown endpoint' })
 }
 
 app.use(unknownEndpoint)
- 
-app.use(errorHandler) 
+
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 3001
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`)
 })
